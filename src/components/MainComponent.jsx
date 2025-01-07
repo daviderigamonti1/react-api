@@ -1,14 +1,39 @@
 import Card from "./Card.jsx";
 import posts from "../data/posts.js";
 import MyForm from "./MyForm.jsx";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+
+const apiUrl = "http://localhost:3000/posts";
+
 function MainComponent() {
     const [postItem, setPostItem] = useState(posts);
 
-    /**
-     * Aggiunge un post (aggiornando lo state) sul evento di onSubmit di MyForm.jsx
-     * @param {object} postData 
-     */
+    useEffect(() => {
+        getData();
+    }, []);
+
+    function getData() {
+        axios.get(apiUrl).then((res) => {
+            console.log(res.data);
+            setPostItem(res.data.data);
+        })
+            .catch((error) => {
+                console.error("Errore durante il recupero dei dati", error)
+            });
+    }
+
+    function deleteItem(id) {
+        axios.delete(`${apiUrl}/${id}`)
+            .then(() => {
+                setPostItem(postItem.filter((el) => el.id !== id));
+            })
+            .catch((error) => {
+                console.error("Errore durante la cancellazione del post", error);
+            });
+
+    }
+
     function addPost(postData) {
         const newPost = {
             id: postData.id,
@@ -37,6 +62,7 @@ function MainComponent() {
                             id={post.id}
                             posts={postItem}
                             setPosts={setPostItem}
+                            onDelete={() => deleteItem(postItem.id)}
                         />
                     </div>
                 ))}

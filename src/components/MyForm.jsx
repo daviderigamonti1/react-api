@@ -9,10 +9,7 @@ const newPost = {
 }
 function MyForm({ onAddPost }) {
     const [formData, setFormData] = useState(newPost);
-    /**
-     * Gestisce l'evento submit della Form
-     * @param {object} e Event JS
-     */
+    
     function handleSubmit(e) {
         e.preventDefault();
         onAddPost(formData);
@@ -25,10 +22,6 @@ function MyForm({ onAddPost }) {
         })
     }
 
-    /**
-     * Gestisce l'evento change di un singolo input
-     * @param {object} e Event JS
-     */
     function handleInput(e) {
         const value = e.target.value;
         setFormData({ ...formData, [e.target.name]: value, id: crypto.randomUUID() })

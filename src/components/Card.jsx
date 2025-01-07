@@ -1,5 +1,5 @@
-function Card({ image, title, content, author, date, id, posts, setPosts }) {
-    const deletePost = (e) => {
+function Card({ image, title, content, author, date, id, posts, setPosts, deletePost }) {
+    const handleDelete = (e) => {
         const updatePosts = posts.filter((post) => post.id !== id)
         setPosts(updatePosts);
     }
@@ -14,7 +14,7 @@ function Card({ image, title, content, author, date, id, posts, setPosts }) {
                     <button className="btn btn-primary">scopri di più</button>
                     <button
                         className="btn btn-danger"
-                        onClick={deletePost}>Elimina
+                        onClick={handleDelete}>Elimina
                     </button>
                 </div>
             </div>
