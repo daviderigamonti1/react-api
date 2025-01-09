@@ -1,7 +1,6 @@
-function Card({ image, title, content, author, date, id, posts, setPosts, deletePost }) {
+function Card({ image, title, content, id, onDelete }) {
     const handleDelete = (e) => {
-        const updatePosts = posts.filter((post) => post.id !== id)
-        setPosts(updatePosts);
+        onDelete(id);
     }
 
     return (
@@ -11,7 +10,7 @@ function Card({ image, title, content, author, date, id, posts, setPosts, delete
                 <h5>{title}</h5>
                 <p>{content}</p>
                 <div className="d-flex justify-content-between">
-                    <button className="btn btn-primary">scopri di più</button>
+                    <button className="btn btn-primary upper">scopri di più</button>
                     <button
                         className="btn btn-danger"
                         onClick={handleDelete}>Elimina

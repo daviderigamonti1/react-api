@@ -1,5 +1,4 @@
 import Card from "./Card.jsx";
-import posts from "../data/posts.js";
 import MyForm from "./MyForm.jsx";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -7,24 +6,20 @@ import axios from "axios";
 const apiUrl = "http://localhost:3000/posts";
 
 function MainComponent() {
-    const [postItem, setPostItem] = useState(posts);
+    const [postItem, setPostItem] = useState([]);
 
-    useEffect(() => {
-        getData();
-    }, []);
+    useEffect(getData, []);
 
     function getData() {
-        axios.get(apiUrl).then((res) => {
-            console.log(res.data);
-            setPostItem(res.data.data);
-        })
-            .catch((error) => {
-                console.error("Errore durante il recupero dei dati", error)
-            });
+        axios
+            .get(apiUrl)
+            .then((res) => setPostItem(res.data.data))
+            .catch((error) => console.error("Errore durante il recupero dei dati", error))
     }
 
     function deleteItem(id) {
-        axios.delete(`${apiUrl}/${id}`)
+        axios
+            .delete(`${apiUrl}/${id}`)
             .then(() => {
                 setPostItem(postItem.filter((el) => el.id !== id));
             })
@@ -41,11 +36,18 @@ function MainComponent() {
             title: postData.title,
             content: postData.content,
             author: postData.author,
-            date: postData.date
+            date: postData.date,
+            checkbox: postData.checkbox
         };
-
-        // aggiorno lo stare di postItem
-        setPostItem([...postItem, newPost]);
+        axios
+            .post(apiUrl, newPost)
+            .then((res) => {
+                // aggiorno lo state di postItem
+                setPostItem([...postItem, res.data]);
+            })
+            .catch((error) => {
+                console.log("Errore durante l'aggiunta del post", error);
+            })
     }
 
     return (
@@ -60,9 +62,7 @@ function MainComponent() {
                             author={post.author}
                             date={post.date}
                             id={post.id}
-                            posts={postItem}
-                            setPosts={setPostItem}
-                            onDelete={() => deleteItem(postItem.id)}
+                            onDelete={() => deleteItem(post.id)}
                         />
                     </div>
                 ))}

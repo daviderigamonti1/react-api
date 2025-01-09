@@ -6,25 +6,30 @@ const newPost = {
     content: '',
     image: "",
     date: "",
+    checkbox: false,
 }
 function MyForm({ onAddPost }) {
     const [formData, setFormData] = useState(newPost);
-    
+
     function handleSubmit(e) {
         e.preventDefault();
-        onAddPost(formData);
+        if (formData.checkbox) {
+            onAddPost(formData);
+        }
         setFormData({
             title: "",
             author: "",
             content: "",
             image: "",
             date: "",
+            checkbox: false
         })
     }
 
     function handleInput(e) {
-        const value = e.target.value;
-        setFormData({ ...formData, [e.target.name]: value, id: crypto.randomUUID() })
+        const { name, type, value, checked } = e.target;
+        const inputValue = type == "checkbox" ? checked : value;
+        setFormData({ ...formData, [e.target.name]: inputValue, id: crypto.randomUUID() });
     }
 
     return (
@@ -45,6 +50,7 @@ function MyForm({ onAddPost }) {
                     type="text"
                     name="author"
                     className="form-control mb-3"
+                    onChange={handleInput}
                     value={formData.author}
                     placeholder="Inserisci l'autore" />
                 <label htmlFor="content" className="form-label">Contenuto</label>
@@ -60,6 +66,7 @@ function MyForm({ onAddPost }) {
                     type="text"
                     name="image"
                     className="form-control mb-3"
+                    onChange={handleInput}
                     value={formData.image}
                     placeholder="Inserisci l'immagine" />
                 <label htmlFor="date" className="form-label">Data pubblicazione</label>
@@ -67,8 +74,18 @@ function MyForm({ onAddPost }) {
                     type="text"
                     name="date"
                     className="form-control mb-3"
+                    onChange={handleInput}
                     value={formData.date}
                     placeholder="Inserisci data di pubblicazione" />
+                <div className="d-flex pt-3">
+                    <label htmlFor="checkbox" className="form-label">Vuoi aggiungere il post al blog?</label>
+                    <input
+                        type="checkbox"
+                        name="checkbox"
+                        className="ms-2 mb-1"
+                        onChange={handleInput}
+                        checked={formData.checkbox} />
+                </div>
                 <button className="btn btn-primary mt-4">Invia</button>
             </form>
         </section>
